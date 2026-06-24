@@ -296,7 +296,7 @@ DIRECT_URL="postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postg
 2. Buka Netlify, pilih **Add new site > Import an existing project**.
 3. Import repository CARIMAKAN.
 4. Netlify akan membaca `netlify.toml`:
-   - Build command: `npm install --prefix backend --include=dev && npm run prisma:generate --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend`
+   - Build command: `npm install --include=dev && npm install --prefix backend --include=dev && npm run prisma:generate --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend`
    - Publish directory: `frontend/dist`
    - Functions directory: `netlify/functions`
 5. Tambahkan environment variable di Netlify:
