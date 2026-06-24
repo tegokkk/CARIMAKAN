@@ -13,14 +13,14 @@
   <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white" />
   <img alt="Express" src="https://img.shields.io/badge/Express-5-111111?logo=express&logoColor=white" />
   <img alt="Prisma" src="https://img.shields.io/badge/Prisma-ORM-2d3748?logo=prisma&logoColor=white" />
-  <img alt="MySQL" src="https://img.shields.io/badge/MySQL-MariaDB-005c84?logo=mysql&logoColor=white" />
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-Supabase-336791?logo=postgresql&logoColor=white" />
 </p>
 
 ---
 
 ## Overview
 
-CARIMAKAN adalah aplikasi full-stack food ordering. Frontend dibuat dengan React + Vite, backend memakai Express + Prisma, dan database menggunakan MySQL/MariaDB.
+CARIMAKAN adalah aplikasi full-stack food ordering. Frontend dibuat dengan React + Vite, backend memakai Express + Prisma, dan database menggunakan PostgreSQL/Supabase.
 
 Fokus project ini adalah membuat pengalaman pencarian makanan terasa cepat dan jelas: user bisa melihat menu, memasukkan item ke keranjang, checkout, lalu memantau riwayat pesanan. Admin dapat mengelola menu, kategori, restoran, pesanan, dan user dari dashboard.
 
@@ -57,7 +57,7 @@ flowchart LR
 | Frontend | React 19, Vite, React Router, Axios, React Icons, React Hot Toast |
 | Styling | Tailwind CSS 4, GSAP, Lenis, custom retro components |
 | Backend | Node.js, Express 5, Prisma Client |
-| Database | MySQL atau MariaDB |
+| Database | PostgreSQL atau Supabase |
 | Auth & Security | JWT, Bcrypt, Helmet, CORS, rate limit |
 | Validation & Upload | Zod, Multer |
 
@@ -158,12 +158,8 @@ Contoh konfigurasi ada di `backend/.env.example`.
 PORT=5000
 NODE_ENV=development
 
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=carimakan_db
-DB_PORT=3306
-DATABASE_URL="mysql://root:@localhost:3306/carimakan_db"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/carimakan_db?schema=public"
+DIRECT_URL="postgresql://postgres:password@localhost:5432/carimakan_db?schema=public"
 
 JWT_SECRET=carimakan_secret_key
 JWT_EXPIRES_IN=7d
@@ -276,13 +272,66 @@ npm run build
 - Jika menu belum muncul, pastikan migration dan seed sudah dijalankan.
 - Jika checkout gagal, pastikan user sudah login dan backend aktif.
 
-## Deployment
+## Deployment Fullstack Netlify + Supabase
 
-1. Set environment production untuk backend dan frontend.
-2. Install dependency di `backend` dan `frontend`.
-3. Jalankan `npm run prisma:deploy` di backend.
-4. Build frontend dengan `npm run build`.
-5. Deploy backend Node.js dan static frontend sesuai platform hosting.
+Repo ini sudah memiliki `netlify.toml` di root untuk deploy frontend React + Vite dan backend Express sebagai Netlify Function.
+
+### 1. Buat Database Supabase
+
+1. Buat project baru di Supabase.
+2. Buka **Project Settings > Database**.
+3. Ambil connection string PostgreSQL.
+4. Gunakan direct connection untuk `DIRECT_URL` dan pooler connection untuk `DATABASE_URL` jika backend memakai pooler.
+
+Contoh format:
+
+```env
+DATABASE_URL="postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-region.pooler.supabase.com:6543/postgres?pgbouncer=true&schema=public"
+DIRECT_URL="postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgres?schema=public"
+```
+
+### 2. Deploy ke Netlify
+
+1. Push project ini ke GitHub.
+2. Buka Netlify, pilih **Add new site > Import an existing project**.
+3. Import repository CARIMAKAN.
+4. Netlify akan membaca `netlify.toml`:
+   - Build command: `npm install --prefix backend --include=dev && npm run prisma:generate --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend`
+   - Publish directory: `frontend/dist`
+   - Functions directory: `netlify/functions`
+5. Tambahkan environment variable di Netlify:
+
+```env
+NODE_ENV=production
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:6543/postgres?pgbouncer=true&schema=public
+DIRECT_URL=postgresql://USER:PASSWORD@HOST:5432/postgres?schema=public
+JWT_SECRET=isi_dengan_secret_yang_kuat
+JWT_EXPIRES_IN=7d
+CLIENT_URL=https://domain-netlify-anda.netlify.app
+UPLOAD_PATH=uploads
+VITE_API_URL=/api
+```
+
+6. Klik **Deploy**.
+
+### 3. Jalankan Migration dan Seed
+
+Setelah deploy pertama berhasil, buka **Netlify > Site > Functions** untuk memastikan function `api` aktif. Lalu jalankan migration dan seed dari lokal dengan env Supabase production:
+
+```bash
+cd backend
+npm run prisma:deploy
+npm run seed
+npm run seed:users
+```
+
+Frontend akan memanggil backend lewat path yang sama:
+
+```text
+https://domain-netlify-anda.netlify.app/api
+```
+
+Catatan: Netlify Functions tidak cocok untuk upload file permanen. Untuk production, simpan gambar upload ke Supabase Storage atau gunakan URL gambar eksternal.
 
 ---
 
