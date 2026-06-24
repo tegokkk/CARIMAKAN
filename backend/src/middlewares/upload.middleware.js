@@ -1,12 +1,11 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const getUploadPath = require('../config/uploadPath');
 require('dotenv').config();
 
-const uploadPath = process.env.UPLOAD_PATH || 'uploads';
-
 // Ensure upload directory exists
-const absoluteUploadPath = path.resolve(uploadPath);
+const absoluteUploadPath = getUploadPath();
 if (!fs.existsSync(absoluteUploadPath)) {
   fs.mkdirSync(absoluteUploadPath, { recursive: true });
 }

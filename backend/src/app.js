@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const getUploadPath = require('./config/uploadPath');
 require('dotenv').config();
 
 const { sendSuccess, sendError } = require('./utils/response');
@@ -35,8 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve uploaded static files
-const uploadPath = process.env.UPLOAD_PATH || 'uploads';
-app.use('/uploads', express.static(path.resolve(uploadPath)));
+app.use('/uploads', express.static(getUploadPath()));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
