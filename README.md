@@ -1,95 +1,195 @@
-# CARIMAKAN
+<p align="center">
+  <img src="./docs/carimakan-banner.svg" alt="CARIMAKAN - Retro food ordering system" width="100%" />
+</p>
 
-CARIMAKAN adalah web pemesanan makanan bergaya retro dengan katalog menu, keranjang, checkout, riwayat pesanan, favorit, review, dan panel admin. Project ini terdiri dari frontend React/Vite dan backend Express yang menggunakan Prisma Client untuk akses database MySQL/MariaDB.
+<h1 align="center">CARIMAKAN</h1>
 
-## Fitur Utama
+<p align="center">
+  Web pemesanan makanan bergaya retro dengan katalog menu, keranjang, checkout, riwayat pesanan, review, favorit, dan admin panel.
+</p>
 
-- Katalog menu makanan dengan pencarian, kategori, rekomendasi, dan detail menu.
-- Autentikasi user dan admin berbasis JWT.
-- Keranjang belanja, checkout, halaman sukses/detail pesanan, dan riwayat order.
-- Favorit menu dan review/rating menu.
-- Admin panel untuk dashboard, menu, kategori, restoran, pesanan, dan user.
-- Upload gambar menu/restoran via backend.
-- Integrasi TheMealDB untuk pencarian/import referensi makanan eksternal.
-- Error boundary frontend supaya halaman tidak langsung blank ketika ada error React.
-- Rate limit untuk endpoint auth dan admin.
-- Smoke test backend untuk auth, menu, cart, checkout, dan order detail.
+<p align="center">
+  <a href="https://github.com/tegokkk/CARIMAKAN">
+    <img alt="Repository" src="https://img.shields.io/badge/repo-CARIMAKAN-c4310a?style=for-the-badge" />
+  </a>
+  <img alt="Frontend" src="https://img.shields.io/badge/frontend-React_19-20232a?style=for-the-badge&logo=react&logoColor=61dafb" />
+  <img alt="Backend" src="https://img.shields.io/badge/backend-Express_5-111111?style=for-the-badge&logo=express&logoColor=white" />
+  <img alt="Database" src="https://img.shields.io/badge/database-Prisma_+_MySQL-2d3748?style=for-the-badge&logo=prisma&logoColor=white" />
+</p>
+
+---
+
+## Tentang Project
+
+CARIMAKAN adalah aplikasi full-stack untuk pemesanan makanan. Frontend memakai React dan Vite dengan tampilan retro, sementara backend memakai Express, Prisma Client, dan MySQL/MariaDB.
+
+Project ini cocok untuk studi kasus:
+
+- food ordering app
+- admin dashboard
+- autentikasi user/admin
+- REST API dengan Prisma ORM
+- checkout flow end-to-end
+- frontend state, error boundary, dan protected routes
+
+## Highlight
+
+| Area | Detail |
+| --- | --- |
+| Menu | Katalog makanan, pencarian, kategori, rekomendasi, detail menu |
+| User | Register, login, profil, favorit, review, rating |
+| Cart | Tambah menu, ubah jumlah, hapus item, clear cart |
+| Checkout | Buat pesanan, detail pesanan, riwayat order |
+| Admin | Dashboard, kelola menu, kategori, restoran, pesanan, user |
+| Backend | Express 5, Prisma ORM, JWT, Zod, Multer, rate limit |
+| UI | Tema retro, reusable components, error boundary |
+| Testing | Smoke test backend untuk flow utama |
+
+## Preview Flow
+
+```mermaid
+flowchart LR
+  A["User buka katalog"] --> B["Pilih menu"]
+  B --> C["Tambah ke cart"]
+  C --> D["Checkout"]
+  D --> E["Detail pesanan"]
+  E --> F["Riwayat order"]
+
+  G["Admin login"] --> H["Kelola menu"]
+  H --> I["Kelola order"]
+  I --> J["Update status"]
+```
 
 ## Tech Stack
 
 ### Frontend
 
-- React 19
-- Vite
-- React Router
-- Axios
-- React Hot Toast
-- React Icons
-- GSAP dan Lenis
-- Tailwind CSS 4
+| Teknologi | Fungsi |
+| --- | --- |
+| React 19 | UI application |
+| Vite | Development server dan build |
+| React Router | Routing halaman |
+| Axios | HTTP client |
+| React Hot Toast | Feedback/toast |
+| React Icons | Icon UI |
+| GSAP + Lenis | Animasi dan smooth scroll |
+| Tailwind CSS 4 | Styling utility |
 
 ### Backend
 
-- Node.js
-- Express 5
-- Prisma ORM
-- MySQL/MariaDB
-- JWT
-- Bcrypt
-- Zod validation
-- Multer upload
-- Helmet, CORS, Morgan
+| Teknologi | Fungsi |
+| --- | --- |
+| Express 5 | REST API |
+| Prisma Client | ORM database |
+| MySQL/MariaDB | Database |
+| JWT | Autentikasi |
+| Bcrypt | Hash password |
+| Zod | Validasi request |
+| Multer | Upload gambar |
+| Helmet/CORS/Morgan | Security, CORS, logging |
 
 ## Struktur Project
 
 ```text
 CARIMAKAN/
-├── backend/
-│   ├── prisma/
-│   │   ├── migrations/
-│   │   └── schema.prisma
-│   ├── scripts/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middlewares/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── server.js
-│   └── test-smoke.js
-├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── context/
-│       ├── pages/
-│       ├── providers/
-│       └── services/
-└── README.md
++-- backend/
+|   +-- prisma/
+|   |   +-- migrations/
+|   |   +-- schema.prisma
+|   +-- scripts/
+|   +-- src/
+|   |   +-- config/
+|   |   +-- controllers/
+|   |   +-- middlewares/
+|   |   +-- routes/
+|   |   +-- services/
+|   |   +-- server.js
+|   +-- test-smoke.js
++-- frontend/
+|   +-- public/
+|   +-- src/
+|   |   +-- components/
+|   |   +-- context/
+|   |   +-- pages/
+|   |   +-- providers/
+|   |   +-- services/
++-- docs/
+|   +-- carimakan-banner.svg
++-- README.md
 ```
 
-## Prasyarat
+## Quick Start
 
-- Node.js 20 atau lebih baru
-- MySQL/MariaDB aktif di lokal
-- Git
+### 1. Clone Repository
 
-## Setup Backend
+```bash
+git clone https://github.com/tegokkk/CARIMAKAN.git
+cd CARIMAKAN
+```
 
-Masuk ke folder backend:
+### 2. Setup Database
+
+Buat database MySQL/MariaDB:
+
+```sql
+CREATE DATABASE carimakan_db;
+```
+
+### 3. Setup Backend
 
 ```bash
 cd backend
 npm install
+cp .env.example .env
+npm run prisma:generate
+npm run prisma:migrate
+npm run seed
+npm run seed:users
+npm run dev
 ```
 
-Copy file environment:
+Backend berjalan di:
+
+```text
+http://localhost:5000
+```
+
+Health check:
+
+```text
+GET http://localhost:5000/api/health
+```
+
+### 4. Setup Frontend
+
+Buka terminal baru:
 
 ```bash
-cp .env.example .env
+cd frontend
+npm install
 ```
 
-Sesuaikan isi `.env`, terutama bagian database:
+Buat file `.env`:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+Jalankan frontend:
+
+```bash
+npm run dev
+```
+
+Frontend berjalan di:
+
+```text
+http://localhost:5173
+```
+
+## Environment Backend
+
+Contoh konfigurasi ada di `backend/.env.example`.
 
 ```env
 PORT=5000
@@ -109,108 +209,43 @@ CLIENT_URL=http://localhost:5173
 UPLOAD_PATH=uploads
 ```
 
-Buat database di MySQL/MariaDB:
+## Akun Development
 
-```sql
-CREATE DATABASE carimakan_db;
-```
-
-Generate Prisma Client dan jalankan migrasi:
-
-```bash
-npm run prisma:generate
-npm run prisma:migrate
-```
-
-Seed data menu dan user default:
-
-```bash
-npm run seed
-npm run seed:users
-```
-
-Jalankan backend:
-
-```bash
-npm run dev
-```
-
-Backend berjalan di:
-
-```text
-http://localhost:5000
-```
-
-Health check:
-
-```text
-GET http://localhost:5000/api/health
-```
-
-## Setup Frontend
-
-Masuk ke folder frontend:
-
-```bash
-cd frontend
-npm install
-```
-
-Buat file `.env` jika belum ada:
-
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-Jalankan frontend:
-
-```bash
-npm run dev
-```
-
-Frontend berjalan di:
-
-```text
-http://localhost:5173
-```
-
-## Akun Default
-
-Setelah menjalankan `npm run seed:users`, tersedia akun development:
+Jalankan `npm run seed:users` untuk membuat akun default:
 
 | Role | Email | Password |
 | --- | --- | --- |
 | Admin | `admin@carimakan.test` | `admin123` |
 | User | `user@carimakan.test` | `user123` |
 
-Ganti password dan `JWT_SECRET` sebelum dipakai untuk production.
+Untuk production, ganti password default dan gunakan `JWT_SECRET` yang kuat.
 
-## Script Penting
+## Script
 
 ### Backend
 
-| Script | Fungsi |
+| Command | Fungsi |
 | --- | --- |
-| `npm run dev` | Menjalankan server backend |
-| `npm start` | Menjalankan server backend |
+| `npm run dev` | Menjalankan backend |
+| `npm start` | Menjalankan backend |
 | `npm run prisma:generate` | Generate Prisma Client |
-| `npm run prisma:migrate` | Membuat/menjalankan migration development |
-| `npm run prisma:deploy` | Menjalankan migration untuk deployment |
-| `npm run prisma:studio` | Membuka Prisma Studio |
-| `npm run seed` | Seed data menu dari file markdown |
-| `npm run seed:users` | Seed akun admin dan user default |
-| `npm test` | Menjalankan smoke test backend |
+| `npm run prisma:migrate` | Jalankan migrasi development |
+| `npm run prisma:deploy` | Jalankan migrasi production |
+| `npm run prisma:studio` | Buka Prisma Studio |
+| `npm run seed` | Seed data menu |
+| `npm run seed:users` | Seed akun admin dan user |
+| `npm test` | Jalankan smoke test |
 
 ### Frontend
 
-| Script | Fungsi |
+| Command | Fungsi |
 | --- | --- |
-| `npm run dev` | Menjalankan Vite development server |
-| `npm run build` | Build frontend untuk production |
+| `npm run dev` | Menjalankan Vite dev server |
+| `npm run build` | Build frontend |
 | `npm run preview` | Preview hasil build |
-| `npm run lint` | Menjalankan ESLint |
+| `npm run lint` | Jalankan ESLint |
 
-## Endpoint API Utama
+## API Overview
 
 Base URL:
 
@@ -231,13 +266,13 @@ http://localhost:5000/api
 | External Meal | `/external/meals/search`, `/external/meals/:id` |
 | Admin | `/admin/stats`, `/admin/users`, `/admin/orders` |
 
-Endpoint admin membutuhkan token user dengan role `admin`.
+Endpoint admin membutuhkan token dengan role `admin`.
 
-## Halaman Frontend
+## Frontend Routes
 
 | Route | Fungsi |
 | --- | --- |
-| `/` | Beranda dan rekomendasi menu |
+| `/` | Beranda |
 | `/search` | Pencarian menu |
 | `/menu/:id` | Detail menu |
 | `/cart` | Keranjang |
@@ -255,42 +290,39 @@ Endpoint admin membutuhkan token user dengan role `admin`.
 
 ## Testing
 
-Jalankan smoke test backend:
+Backend smoke test:
 
 ```bash
 cd backend
 npm test
 ```
 
-Test ini memeriksa flow utama:
-
-- Health check API
-- Register dan login
-- Admin membuat category, restaurant, dan menu
-- User menambahkan menu ke cart
-- Checkout
-- Ambil detail order
-
-Build frontend:
+Frontend production build:
 
 ```bash
 cd frontend
 npm run build
 ```
 
-## Catatan Development
+## Catatan
 
-- File `.env`, `node_modules`, `dist`, dan upload runtime tidak ikut Git.
-- Backend sudah memakai Prisma untuk modul utama aplikasi.
-- File `.env.example` aman untuk contoh konfigurasi, tetapi jangan pakai secret default untuk production.
-- Jika migrasi gagal, pastikan database sudah dibuat dan `DATABASE_URL` benar.
-- Jika gambar tidak muncul, cek `UPLOAD_PATH` dan URL backend di frontend.
+- File `.env`, `node_modules`, `dist`, dan upload runtime tidak masuk Git.
+- Prisma schema berada di `backend/prisma/schema.prisma`.
+- Migration berada di `backend/prisma/migrations`.
+- Upload gambar disajikan dari endpoint `/uploads`.
+- Jika data menu belum muncul, pastikan migration dan seed sudah dijalankan.
+- Jika checkout gagal, pastikan user sudah login dan backend aktif.
 
-## Deployment Singkat
+## Deployment Ringkas
 
-1. Set environment production di backend dan frontend.
-2. Jalankan `npm install` di `backend` dan `frontend`.
+1. Set environment production untuk backend dan frontend.
+2. Install dependency di `backend` dan `frontend`.
 3. Jalankan `npm run prisma:deploy` di backend.
 4. Build frontend dengan `npm run build`.
-5. Serve backend Node.js dan hasil build frontend sesuai platform hosting.
+5. Deploy backend Node.js dan static frontend sesuai platform hosting.
 
+---
+
+<p align="center">
+  Built as a retro food ordering system with React, Express, Prisma, and MySQL.
+</p>
