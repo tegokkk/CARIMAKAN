@@ -1,0 +1,22 @@
+import api from "./api";
+
+const orderService = {
+  checkout: async (orderData) => {
+    const response = await api.post("/orders", orderData);
+    return response.data;
+  },
+  createOrder: async (orderData) => {
+    const response = await api.post("/orders", orderData);
+    return response.data;
+  },
+  getMyOrders: async () => {
+    const response = await api.get("/orders/my");
+    return response.data;
+  },
+  getOrderById: async (id) => {
+    const response = await api.get(`/orders/${id}`);
+    return response.data;
+  },
+};
+
+export default orderService;
