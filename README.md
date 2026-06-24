@@ -1,141 +1,110 @@
 <p align="center">
-  <img src="./docs/carimakan-banner.svg" alt="CARIMAKAN - Retro food ordering system" width="100%" />
+  <img src="./docs/carimakan-banner.png" alt="CARIMAKAN homepage banner" width="100%" />
 </p>
 
 <h1 align="center">CARIMAKAN</h1>
 
 <p align="center">
-  Web pemesanan makanan bergaya retro dengan katalog menu, keranjang, checkout, riwayat pesanan, review, favorit, dan admin panel.
+  Web pemesanan makanan lokal bergaya retro dengan katalog menu, cart, checkout, riwayat pesanan, favorit, review, dan admin panel.
 </p>
 
 <p align="center">
-  <a href="https://github.com/tegokkk/CARIMAKAN">
-    <img alt="Repository" src="https://img.shields.io/badge/repo-CARIMAKAN-c4310a?style=for-the-badge" />
-  </a>
-  <img alt="Frontend" src="https://img.shields.io/badge/frontend-React_19-20232a?style=for-the-badge&logo=react&logoColor=61dafb" />
-  <img alt="Backend" src="https://img.shields.io/badge/backend-Express_5-111111?style=for-the-badge&logo=express&logoColor=white" />
-  <img alt="Database" src="https://img.shields.io/badge/database-Prisma_+_MySQL-2d3748?style=for-the-badge&logo=prisma&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React-19-20232a?logo=react&logoColor=61dafb" />
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white" />
+  <img alt="Express" src="https://img.shields.io/badge/Express-5-111111?logo=express&logoColor=white" />
+  <img alt="Prisma" src="https://img.shields.io/badge/Prisma-ORM-2d3748?logo=prisma&logoColor=white" />
+  <img alt="MySQL" src="https://img.shields.io/badge/MySQL-MariaDB-005c84?logo=mysql&logoColor=white" />
 </p>
 
 ---
 
-## Tentang Project
+## Overview
 
-CARIMAKAN adalah aplikasi full-stack untuk pemesanan makanan. Frontend memakai React dan Vite dengan tampilan retro, sementara backend memakai Express, Prisma Client, dan MySQL/MariaDB.
+CARIMAKAN adalah aplikasi full-stack food ordering. Frontend dibuat dengan React + Vite, backend memakai Express + Prisma, dan database menggunakan MySQL/MariaDB.
 
-Project ini cocok untuk studi kasus:
+Fokus project ini adalah membuat pengalaman pencarian makanan terasa cepat dan jelas: user bisa melihat menu, memasukkan item ke keranjang, checkout, lalu memantau riwayat pesanan. Admin dapat mengelola menu, kategori, restoran, pesanan, dan user dari dashboard.
 
-- food ordering app
-- admin dashboard
-- autentikasi user/admin
-- REST API dengan Prisma ORM
-- checkout flow end-to-end
-- frontend state, error boundary, dan protected routes
+## Fitur
 
-## Highlight
-
-| Area | Detail |
+| Modul | Fitur |
 | --- | --- |
-| Menu | Katalog makanan, pencarian, kategori, rekomendasi, detail menu |
-| User | Register, login, profil, favorit, review, rating |
-| Cart | Tambah menu, ubah jumlah, hapus item, clear cart |
-| Checkout | Buat pesanan, detail pesanan, riwayat order |
-| Admin | Dashboard, kelola menu, kategori, restoran, pesanan, user |
-| Backend | Express 5, Prisma ORM, JWT, Zod, Multer, rate limit |
-| UI | Tema retro, reusable components, error boundary |
-| Testing | Smoke test backend untuk flow utama |
+| Menu | katalog, pencarian, kategori, rekomendasi, detail menu |
+| User | register, login, profil, favorit, review, rating |
+| Cart | tambah item, ubah jumlah, hapus item, clear cart |
+| Checkout | buat pesanan, halaman detail pesanan, riwayat order |
+| Admin | dashboard, menu, kategori, restoran, pesanan, user |
+| Backend | Prisma ORM, JWT auth, Zod validation, upload gambar |
+| Safety | error boundary frontend, rate limit auth/admin, smoke test |
 
-## Preview Flow
+## Alur Aplikasi
 
 ```mermaid
 flowchart LR
-  A["User buka katalog"] --> B["Pilih menu"]
+  A["Cari menu"] --> B["Detail makanan"]
   B --> C["Tambah ke cart"]
   C --> D["Checkout"]
   D --> E["Detail pesanan"]
   E --> F["Riwayat order"]
 
-  G["Admin login"] --> H["Kelola menu"]
-  H --> I["Kelola order"]
-  I --> J["Update status"]
+  G["Admin"] --> H["Kelola data"]
+  H --> I["Update status pesanan"]
 ```
 
 ## Tech Stack
 
-### Frontend
-
-| Teknologi | Fungsi |
+| Layer | Teknologi |
 | --- | --- |
-| React 19 | UI application |
-| Vite | Development server dan build |
-| React Router | Routing halaman |
-| Axios | HTTP client |
-| React Hot Toast | Feedback/toast |
-| React Icons | Icon UI |
-| GSAP + Lenis | Animasi dan smooth scroll |
-| Tailwind CSS 4 | Styling utility |
+| Frontend | React 19, Vite, React Router, Axios, React Icons, React Hot Toast |
+| Styling | Tailwind CSS 4, GSAP, Lenis, custom retro components |
+| Backend | Node.js, Express 5, Prisma Client |
+| Database | MySQL atau MariaDB |
+| Auth & Security | JWT, Bcrypt, Helmet, CORS, rate limit |
+| Validation & Upload | Zod, Multer |
 
-### Backend
-
-| Teknologi | Fungsi |
-| --- | --- |
-| Express 5 | REST API |
-| Prisma Client | ORM database |
-| MySQL/MariaDB | Database |
-| JWT | Autentikasi |
-| Bcrypt | Hash password |
-| Zod | Validasi request |
-| Multer | Upload gambar |
-| Helmet/CORS/Morgan | Security, CORS, logging |
-
-## Struktur Project
+## Struktur Folder
 
 ```text
 CARIMAKAN/
-+-- backend/
-|   +-- prisma/
-|   |   +-- migrations/
-|   |   +-- schema.prisma
-|   +-- scripts/
-|   +-- src/
-|   |   +-- config/
-|   |   +-- controllers/
-|   |   +-- middlewares/
-|   |   +-- routes/
-|   |   +-- services/
-|   |   +-- server.js
-|   +-- test-smoke.js
-+-- frontend/
-|   +-- public/
-|   +-- src/
-|   |   +-- components/
-|   |   +-- context/
-|   |   +-- pages/
-|   |   +-- providers/
-|   |   +-- services/
-+-- docs/
-|   +-- carimakan-banner.svg
-+-- README.md
+|-- backend/
+|   |-- prisma/
+|   |-- scripts/
+|   |-- src/
+|   |   |-- config/
+|   |   |-- controllers/
+|   |   |-- middlewares/
+|   |   |-- routes/
+|   |   |-- services/
+|   |   `-- server.js
+|   `-- test-smoke.js
+|-- frontend/
+|   |-- public/
+|   `-- src/
+|       |-- components/
+|       |-- context/
+|       |-- pages/
+|       |-- providers/
+|       `-- services/
+|-- docs/
+|   `-- carimakan-banner.png
+`-- README.md
 ```
 
 ## Quick Start
 
-### 1. Clone Repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/tegokkk/CARIMAKAN.git
 cd CARIMAKAN
 ```
 
-### 2. Setup Database
-
-Buat database MySQL/MariaDB:
+### 2. Buat Database
 
 ```sql
 CREATE DATABASE carimakan_db;
 ```
 
-### 3. Setup Backend
+### 3. Jalankan Backend
 
 ```bash
 cd backend
@@ -154,13 +123,7 @@ Backend berjalan di:
 http://localhost:5000
 ```
 
-Health check:
-
-```text
-GET http://localhost:5000/api/health
-```
-
-### 4. Setup Frontend
+### 4. Jalankan Frontend
 
 Buka terminal baru:
 
@@ -175,7 +138,7 @@ Buat file `.env`:
 VITE_API_URL=http://localhost:5000/api
 ```
 
-Jalankan frontend:
+Jalankan aplikasi:
 
 ```bash
 npm run dev
@@ -211,7 +174,7 @@ UPLOAD_PATH=uploads
 
 ## Akun Development
 
-Jalankan `npm run seed:users` untuk membuat akun default:
+Jalankan `npm run seed:users` untuk membuat akun default.
 
 | Role | Email | Password |
 | --- | --- | --- |
@@ -226,26 +189,26 @@ Untuk production, ganti password default dan gunakan `JWT_SECRET` yang kuat.
 
 | Command | Fungsi |
 | --- | --- |
-| `npm run dev` | Menjalankan backend |
-| `npm start` | Menjalankan backend |
-| `npm run prisma:generate` | Generate Prisma Client |
-| `npm run prisma:migrate` | Jalankan migrasi development |
-| `npm run prisma:deploy` | Jalankan migrasi production |
-| `npm run prisma:studio` | Buka Prisma Studio |
-| `npm run seed` | Seed data menu |
-| `npm run seed:users` | Seed akun admin dan user |
-| `npm test` | Jalankan smoke test |
+| `npm run dev` | menjalankan backend |
+| `npm start` | menjalankan backend |
+| `npm run prisma:generate` | generate Prisma Client |
+| `npm run prisma:migrate` | menjalankan migration development |
+| `npm run prisma:deploy` | menjalankan migration production |
+| `npm run prisma:studio` | membuka Prisma Studio |
+| `npm run seed` | seed data menu |
+| `npm run seed:users` | seed user admin dan user biasa |
+| `npm test` | menjalankan smoke test |
 
 ### Frontend
 
 | Command | Fungsi |
 | --- | --- |
-| `npm run dev` | Menjalankan Vite dev server |
-| `npm run build` | Build frontend |
-| `npm run preview` | Preview hasil build |
-| `npm run lint` | Jalankan ESLint |
+| `npm run dev` | menjalankan Vite dev server |
+| `npm run build` | build frontend |
+| `npm run preview` | preview hasil build |
+| `npm run lint` | menjalankan ESLint |
 
-## API Overview
+## API Ringkas
 
 Base URL:
 
@@ -268,25 +231,25 @@ http://localhost:5000/api
 
 Endpoint admin membutuhkan token dengan role `admin`.
 
-## Frontend Routes
+## Route Frontend
 
-| Route | Fungsi |
+| Route | Halaman |
 | --- | --- |
-| `/` | Beranda |
-| `/search` | Pencarian menu |
-| `/menu/:id` | Detail menu |
-| `/cart` | Keranjang |
-| `/checkout` | Checkout |
-| `/orders` | Riwayat pesanan |
-| `/orders/:id` | Detail pesanan |
-| `/favorites` | Menu favorit |
-| `/profile` | Profil user |
-| `/admin` | Dashboard admin |
-| `/admin/menus` | Kelola menu |
-| `/admin/categories` | Kelola kategori |
-| `/admin/restaurants` | Kelola restoran |
-| `/admin/orders` | Kelola pesanan |
-| `/admin/users` | Kelola user |
+| `/` | beranda |
+| `/search` | pencarian menu |
+| `/menu/:id` | detail menu |
+| `/cart` | keranjang |
+| `/checkout` | checkout |
+| `/orders` | riwayat pesanan |
+| `/orders/:id` | detail pesanan |
+| `/favorites` | favorit |
+| `/profile` | profil |
+| `/admin` | dashboard admin |
+| `/admin/menus` | kelola menu |
+| `/admin/categories` | kelola kategori |
+| `/admin/restaurants` | kelola restoran |
+| `/admin/orders` | kelola pesanan |
+| `/admin/users` | kelola user |
 
 ## Testing
 
@@ -297,7 +260,7 @@ cd backend
 npm test
 ```
 
-Frontend production build:
+Frontend build:
 
 ```bash
 cd frontend
@@ -310,10 +273,10 @@ npm run build
 - Prisma schema berada di `backend/prisma/schema.prisma`.
 - Migration berada di `backend/prisma/migrations`.
 - Upload gambar disajikan dari endpoint `/uploads`.
-- Jika data menu belum muncul, pastikan migration dan seed sudah dijalankan.
+- Jika menu belum muncul, pastikan migration dan seed sudah dijalankan.
 - Jika checkout gagal, pastikan user sudah login dan backend aktif.
 
-## Deployment Ringkas
+## Deployment
 
 1. Set environment production untuk backend dan frontend.
 2. Install dependency di `backend` dan `frontend`.
@@ -324,5 +287,5 @@ npm run build
 ---
 
 <p align="center">
-  Built as a retro food ordering system with React, Express, Prisma, and MySQL.
+  CARIMAKAN - cari rasa lokal yang pas hari ini.
 </p>
