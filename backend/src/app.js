@@ -34,6 +34,35 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  if (Buffer.isBuffer(req.body)) {
+    try {
+      req.body = JSON.parse(req.body.toString('utf8'));
+    } catch (error) {
+      req.body = {};
+    }
+    return next();
+  }
+
+  if (req.body && typeof req.body === 'object' && Object.keys(req.body).length > 0) {
+    return next();
+  }
+
+  const rawBody = req.apiGateway?.event?.body;
+  const contentType = req.headers['content-type'] || '';
+
+  if (rawBody && contentType.includes('application/json')) {
+    try {
+      req.body = JSON.parse(req.apiGateway.event.isBase64Encoded
+        ? Buffer.from(rawBody, 'base64').toString('utf8')
+        : rawBody);
+    } catch (error) {
+      req.body = {};
+    }
+  }
+
+  return next();
+});
 
 // Serve uploaded static files
 app.use('/uploads', express.static(getUploadPath()));
