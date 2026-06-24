@@ -65,6 +65,9 @@ flowchart LR
 
 ```text
 CARIMAKAN/
+|-- netlify/
+|   `-- functions/
+|       `-- api.js
 |-- backend/
 |   |-- prisma/
 |   |-- scripts/
@@ -86,6 +89,7 @@ CARIMAKAN/
 |       `-- services/
 |-- docs/
 |   `-- carimakan-banner.png
+|-- netlify.toml
 `-- README.md
 ```
 
@@ -150,6 +154,12 @@ Frontend berjalan di:
 http://localhost:5173
 ```
 
+Untuk production Netlify, frontend memakai path relatif:
+
+```env
+VITE_API_URL=/api
+```
+
 ## Environment Backend
 
 Contoh konfigurasi ada di `backend/.env.example`.
@@ -167,6 +177,23 @@ JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
 UPLOAD_PATH=uploads
 ```
+
+## Environment Netlify
+
+Set environment variable ini di **Netlify > Site configuration > Environment variables**:
+
+```env
+NODE_ENV=production
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:6543/postgres?pgbouncer=true&schema=public
+DIRECT_URL=postgresql://USER:PASSWORD@HOST:5432/postgres?schema=public
+JWT_SECRET=isi_dengan_secret_yang_kuat
+JWT_EXPIRES_IN=7d
+CLIENT_URL=https://domain-netlify-anda.netlify.app
+UPLOAD_PATH=uploads
+VITE_API_URL=/api
+```
+
+`DIRECT_URL` dipakai Prisma untuk migration. `DATABASE_URL` dipakai runtime backend.
 
 ## Akun Development
 
@@ -209,7 +236,8 @@ Untuk production, ganti password default dan gunakan `JWT_SECRET` yang kuat.
 Base URL:
 
 ```text
-http://localhost:5000/api
+Local: http://localhost:5000/api
+Production: https://domain-netlify-anda.netlify.app/api
 ```
 
 | Modul | Endpoint |
@@ -263,12 +291,19 @@ cd frontend
 npm run build
 ```
 
+Netlify function health check:
+
+```text
+https://domain-netlify-anda.netlify.app/api/health
+```
+
 ## Catatan
 
 - File `.env`, `node_modules`, `dist`, dan upload runtime tidak masuk Git.
 - Prisma schema berada di `backend/prisma/schema.prisma`.
 - Migration berada di `backend/prisma/migrations`.
-- Upload gambar disajikan dari endpoint `/uploads`.
+- Di Netlify, backend Express berjalan sebagai function di `netlify/functions/api.js`.
+- Upload gambar disajikan dari endpoint `/uploads`, tetapi storage Netlify Function tidak permanen.
 - Jika menu belum muncul, pastikan migration dan seed sudah dijalankan.
 - Jika checkout gagal, pastikan user sudah login dan backend aktif.
 
@@ -314,12 +349,27 @@ VITE_API_URL=/api
 
 6. Klik **Deploy**.
 
+Jika Netlify menggunakan pengaturan dari UI, pastikan nilainya sama dengan `netlify.toml`:
+
+```text
+Build command:
+npm install --include=dev && npm install --prefix backend --include=dev && npm run prisma:generate --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend
+
+Publish directory:
+frontend/dist
+
+Functions directory:
+netlify/functions
+```
+
 ### 3. Jalankan Migration dan Seed
 
 Setelah deploy pertama berhasil, buka **Netlify > Site > Functions** untuk memastikan function `api` aktif. Lalu jalankan migration dan seed dari lokal dengan env Supabase production:
 
-```bash
+```powershell
 cd backend
+$env:DATABASE_URL="ISI_DATABASE_URL_SUPABASE"
+$env:DIRECT_URL="ISI_DIRECT_URL_SUPABASE"
 npm run prisma:deploy
 npm run seed
 npm run seed:users
@@ -332,6 +382,18 @@ https://domain-netlify-anda.netlify.app/api
 ```
 
 Catatan: Netlify Functions tidak cocok untuk upload file permanen. Untuk production, simpan gambar upload ke Supabase Storage atau gunakan URL gambar eksternal.
+
+### 4. Update dan Redeploy
+
+Setelah mengubah kode, push ke GitHub:
+
+```bash
+git add .
+git commit -m "update carimakan"
+git push origin main
+```
+
+Lalu di Netlify jalankan **Deploys > Trigger deploy > Clear cache and deploy site** jika perubahan menyentuh dependency, build command, Prisma, atau function.
 
 ---
 
