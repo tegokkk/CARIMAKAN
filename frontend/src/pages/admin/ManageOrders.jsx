@@ -25,6 +25,7 @@ function ManageOrders() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [openStatusId, setOpenStatusId] = useState(null);
 
   const fetchOrders = async () => {
     try {
@@ -45,6 +46,7 @@ function ManageOrders() {
   }, []);
 
   const handleStatusChange = async (orderId, newStatus) => {
+    setOpenStatusId(null);
     try {
       await adminService.updateOrderStatus(orderId, newStatus);
       toast.success("Status pesanan diupdate");
@@ -134,16 +136,33 @@ function ManageOrders() {
                 <td className="max-w-xs truncate text-[#5c4037]">{order.delivery_address}</td>
                 <td><span className="admin-badge">{order.payment_method || "COD"}</span></td>
                 <td className="font-black text-[#aa3000]">{formatCurrency(order.total_price)}</td>
-                <td>
-                  <select
-                    value={order.status}
-                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                    className={`admin-input w-36 py-2 text-xs font-black ${statusClass[order.status] || ""}`}
-                  >
-                    {statusOptions.map((status) => (
-                      <option key={status} value={status}>{statusLabel[status]}</option>
-                    ))}
-                  </select>
+                <td className="relative">
+                  <div className="relative w-36">
+                    <button
+                      type="button"
+                      onClick={() => setOpenStatusId((currentId) => (currentId === order.id ? null : order.id))}
+                      className={`admin-status-trigger ${statusClass[order.status] || ""}`}
+                      aria-expanded={openStatusId === order.id}
+                    >
+                      <span>{statusLabel[order.status]}</span>
+                      <span aria-hidden="true">⌄</span>
+                    </button>
+
+                    {openStatusId === order.id && (
+                      <div className="admin-status-menu">
+                        {statusOptions.map((status) => (
+                          <button
+                            key={status}
+                            type="button"
+                            onClick={() => handleStatusChange(order.id, status)}
+                            className={`admin-status-option ${status === order.status ? "admin-status-option-active" : ""}`}
+                          >
+                            {statusLabel[status]}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

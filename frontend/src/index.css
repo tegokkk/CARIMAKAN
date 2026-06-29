@@ -614,6 +614,56 @@ input:focus, select:focus, textarea:focus {
   box-shadow: inset 2px 2px 0 rgba(40, 23, 18, 0.12), 0 0 0 2px var(--retro-orange) !important;
 }
 
+.admin-status-trigger {
+  display: flex;
+  width: 100%;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 2px solid var(--retro-line);
+  background: var(--retro-paper);
+  color: var(--retro-ink);
+  padding: 0.55rem 0.75rem;
+  box-shadow: inset 2px 2px 0 rgba(40, 23, 18, 0.12);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.admin-status-menu {
+  position: absolute;
+  z-index: 50;
+  left: 0;
+  top: calc(100% + 0.35rem);
+  width: 100%;
+  border: 2px solid var(--retro-line);
+  background: #fff7cf;
+  box-shadow: var(--retro-shadow-small);
+  overflow: hidden;
+}
+
+.admin-status-option {
+  display: block;
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.45rem 0.75rem;
+  background: transparent;
+  color: var(--retro-ink);
+  text-align: left;
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.admin-status-option:hover,
+.admin-status-option-active {
+  background: var(--retro-blue);
+  color: #ffffff;
+}
+
 .admin-label {
   display: block;
   margin-bottom: 0.45rem;
