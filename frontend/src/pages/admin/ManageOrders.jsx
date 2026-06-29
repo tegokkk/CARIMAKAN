@@ -149,7 +149,7 @@ function ManageOrders() {
                     </button>
 
                     {openStatusId === order.id && (
-                      <div className="admin-status-menu">
+                      <div className="admin-status-menu" data-lenis-prevent>
                         {statusOptions.map((status) => (
                           <button
                             key={status}
