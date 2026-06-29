@@ -1,6 +1,6 @@
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContextValue";
 import { useNavigate, Outlet } from "react-router-dom";
 import toast from "react-hot-toast";
 

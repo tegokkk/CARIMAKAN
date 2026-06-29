@@ -2,7 +2,7 @@ import { useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowRight, FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { CartContext } from "../context/CartContext";
+import { CartContext } from "../context/CartContextValue";
 import PageWrapper from "../components/common/PageWrapper";
 import AnimatedEmptyState from "../components/common/AnimatedEmptyState";
 import RetroButton from "../components/common/RetroButton";

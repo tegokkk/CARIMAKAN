@@ -9,8 +9,8 @@ import {
   FaWallet,
 } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { AuthContext } from "../context/AuthContext";
-import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContextValue";
+import { CartContext } from "../context/CartContextValue";
 import orderService from "../services/order.service";
 import PageWrapper from "../components/common/PageWrapper";
 import RetroButton from "../components/common/RetroButton";

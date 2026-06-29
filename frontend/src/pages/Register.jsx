@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaArrowRight, FaClipboardList, FaUserPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 import authService from "../services/auth.service";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContextValue";
 import PageWrapper from "../components/common/PageWrapper";
 import RetroButton from "../components/common/RetroButton";
 import RetroWindow from "../components/common/RetroWindow";

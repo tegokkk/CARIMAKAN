@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContextValue";
 import PageWrapper from "../components/common/PageWrapper";
 import { FaUserCircle, FaEnvelope, FaPhone, FaShieldAlt } from "react-icons/fa";
 

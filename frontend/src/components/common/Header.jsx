@@ -11,8 +11,8 @@ import {
   FaTimes,
   FaUserCircle,
 } from "react-icons/fa";
-import { AuthContext } from "../../context/AuthContext";
-import { CartContext } from "../../context/CartContext";
+import { AuthContext } from "../../context/AuthContextValue";
+import { CartContext } from "../../context/CartContextValue";
 import { gsap, useGSAP } from "../../animations/gsapConfig";
 
 const navLinks = [

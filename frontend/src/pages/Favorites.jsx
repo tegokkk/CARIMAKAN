@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaArrowRight, FaHeart, FaRegHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
 import favoriteService from "../services/favorite.service";
-import { CartContext } from "../context/CartContext";
+import { CartContext } from "../context/CartContextValue";
 import PageWrapper from "../components/common/PageWrapper";
 import SkeletonCard from "../components/common/SkeletonCard";
 import FoodCard from "../components/food/FoodCard";

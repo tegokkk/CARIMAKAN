@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import { CartContext } from "../../context/CartContext";
+import { AuthContext } from "../../context/AuthContextValue";
+import { CartContext } from "../../context/CartContextValue";
 
 function Footer() {
   const { user } = useContext(AuthContext);

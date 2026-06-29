@@ -1,8 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import cartService from "../services/cart.service";
-import { AuthContext } from "./AuthContext";
-
-export const CartContext = createContext();
+import { AuthContext } from "./AuthContextValue";
+import { CartContext } from "./CartContextValue";
 
 const normalizeCartItem = (item) => ({
   ...item,
@@ -43,28 +42,32 @@ export const CartProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    refreshCart();
+    const timeoutId = window.setTimeout(() => {
+      refreshCart();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [refreshCart]);
 
-  const addToCart = async (menuId, quantity = 1) => {
+  const addToCart = useCallback(async (menuId, quantity = 1) => {
     await cartService.addToCart(menuId, quantity);
     return refreshCart();
-  };
+  }, [refreshCart]);
 
-  const updateQuantity = async (cartItemId, quantity) => {
+  const updateQuantity = useCallback(async (cartItemId, quantity) => {
     await cartService.updateCartItem(cartItemId, quantity);
     return refreshCart();
-  };
+  }, [refreshCart]);
 
-  const removeFromCart = async (cartItemId) => {
+  const removeFromCart = useCallback(async (cartItemId) => {
     await cartService.removeFromCart(cartItemId);
     return refreshCart();
-  };
+  }, [refreshCart]);
 
-  const clearCart = async () => {
+  const clearCart = useCallback(async () => {
     await cartService.clearCart();
     setCart([]);
-  };
+  }, []);
 
   const getCartTotal = useCallback(
     () => cart.reduce((total, item) => total + (Number(item.Menu?.price) || 0) * item.quantity, 0),
@@ -80,7 +83,7 @@ export const CartProvider = ({ children }) => {
     removeFromCart,
     clearCart,
     getCartTotal,
-  }), [cart, loadingCart, refreshCart, getCartTotal]);
+  }), [cart, loadingCart, refreshCart, addToCart, updateQuantity, removeFromCart, clearCart, getCartTotal]);
 
   return (
     <CartContext.Provider value={value}>

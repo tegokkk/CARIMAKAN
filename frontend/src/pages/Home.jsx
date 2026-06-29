@@ -11,8 +11,8 @@ import {
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 import menuService from "../services/menu.service";
-import { AuthContext } from "../context/AuthContext";
-import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContextValue";
+import { CartContext } from "../context/CartContextValue";
 import PageWrapper from "../components/common/PageWrapper";
 import MotionSection from "../components/common/MotionSection";
 import RetroButton from "../components/common/RetroButton";

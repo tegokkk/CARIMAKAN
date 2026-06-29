@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContextValue";
 import { FaClipboardList, FaHome, FaSignOutAlt, FaStore, FaTags, FaTerminal, FaUsers, FaUtensils } from "react-icons/fa";
 
 const navItems = [

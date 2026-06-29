@@ -2,7 +2,7 @@ import { useState, useContext, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowRight, FaLock, FaUserCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContextValue";
 import authService from "../services/auth.service";
 import PageWrapper from "../components/common/PageWrapper";
 import RetroButton from "../components/common/RetroButton";
@@ -104,10 +104,6 @@ function Login() {
                     placeholder="Masukkan password"
                   />
                   {errors.password && <p className="mt-2 border-2 border-[#ba1a1a] bg-[#ffdad6] px-3 py-2 text-xs font-bold text-[#93000a]">{errors.password}</p>}
-                </div>
-
-                <div className="flex justify-end">
-                  <span className="retro-system-copy text-[#5c4037] opacity-60">Lupa password?</span>
                 </div>
 
                 <RetroButton type="submit" variant="primary" disabled={loading} className="h-13 w-full px-6 py-4 disabled:opacity-60">
