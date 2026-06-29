@@ -5,7 +5,7 @@
 <h1 align="center">CARIMAKAN</h1>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&duration=2500&pause=700&color=AA3000&center=true&vCenter=true&width=900&lines=Retro+Food+Ordering+Web+Application;React+%2B+Express+%2B+Prisma+%2B+PostgreSQL;Search+Menu+%7C+Cart+%7C+Checkout+%7C+Admin+Panel" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&duration=2500&pause=700&color=AA3000&center=true&vCenter=true&width=900&height=60&hideCursor=true&lines=Retro+Food+Ordering+Web+Application;React+%2B+Express+%2B+Prisma+%2B+PostgreSQL;Search+Menu+%7C+Cart+%7C+Checkout+%7C+Admin+Panel" alt="Retro Food Ordering Web Application" />
 </p>
 
 <p align="center">
