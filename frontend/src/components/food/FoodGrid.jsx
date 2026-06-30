@@ -1,7 +1,7 @@
 import SkeletonCard from "../common/SkeletonCard";
 import FoodCard from "./FoodCard";
 
-const gridClassName = "grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-5";
+const gridClassName = "grid grid-cols-[repeat(auto-fill,minmax(17rem,22rem))] justify-start gap-5";
 
 function FoodGrid({ menus, loading, onAddToCart, emptyTitle = "Menu belum tersedia" }) {
   if (loading) {
