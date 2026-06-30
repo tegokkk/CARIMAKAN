@@ -1,11 +1,12 @@
-import MotionSection from "../common/MotionSection";
 import SkeletonCard from "../common/SkeletonCard";
 import FoodCard from "./FoodCard";
+
+const gridClassName = "grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-5";
 
 function FoodGrid({ menus, loading, onAddToCart, emptyTitle = "Menu belum tersedia" }) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className={gridClassName}>
         {Array.from({ length: 8 }).map((_, index) => (
           <SkeletonCard key={index} />
         ))}
@@ -25,11 +26,11 @@ function FoodGrid({ menus, loading, onAddToCart, emptyTitle = "Menu belum tersed
   }
 
   return (
-    <MotionSection className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4" staggerSelector=".food-grid-card">
+    <section className={gridClassName}>
       {menus.map((menu) => (
         <FoodCard key={menu.id} menu={menu} onAddToCart={onAddToCart} className="food-grid-card" />
       ))}
-    </MotionSection>
+    </section>
   );
 }
 
