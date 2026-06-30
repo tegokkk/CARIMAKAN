@@ -10,6 +10,7 @@ const restaurantSchema = z.object({
     address: z.string().optional(),
     city: z.string().optional(),
     phone: z.string().optional(),
+    image_url: z.string().trim().url('Image URL must be valid').or(z.literal('')).optional(),
     is_active: z.preprocess((val) => {
       if (val === 'true' || val === '1' || val === 1) return 1;
       if (val === 'false' || val === '0' || val === 0) return 0;
@@ -68,7 +69,7 @@ class RestaurantController {
 
   static async createRestaurant(req, res, next) {
     try {
-      const { name, description, address, city, phone, is_active } = req.body;
+      const { name, description, address, city, phone, image_url, is_active } = req.body;
       const slug = slugify(name);
 
       // Check duplicate slug
@@ -78,7 +79,7 @@ class RestaurantController {
       }
 
       // Check image upload
-      const imagePath = req.file ? `uploads/${req.file.filename}` : null;
+      const imagePath = image_url || (req.file ? `uploads/${req.file.filename}` : null);
 
       const newRestaurant = await prisma.restaurant.create({
         data: {
@@ -102,7 +103,7 @@ class RestaurantController {
   static async updateRestaurant(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, description, address, city, phone, is_active } = req.body;
+      const { name, description, address, city, phone, image_url, is_active } = req.body;
       const slug = slugify(name);
 
       // Check existence
@@ -119,7 +120,10 @@ class RestaurantController {
 
       // Handle image
       let imagePath = restaurant.image;
-      if (req.file) {
+      if (image_url) {
+        imagePath = image_url;
+      }
+      if (!image_url && req.file) {
         imagePath = `uploads/${req.file.filename}`;
       }
 

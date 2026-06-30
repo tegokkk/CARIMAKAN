@@ -11,6 +11,7 @@ const menuSchema = z.object({
     category_id: z.preprocess((val) => Number(val), z.number().int().positive('Category ID is required')),
     name: z.string().min(1, 'Menu name is required'),
     description: z.string().optional(),
+    image_url: z.string().trim().url('Image URL must be valid').or(z.literal('')).optional(),
     price: z.preprocess((val) => Number(val), z.number().positive('Price must be positive')),
     stock: z.preprocess((val) => Number(val), z.number().int().nonnegative().optional().default(0)),
     is_recommended: z.preprocess((val) => {
@@ -74,7 +75,7 @@ class MenuController {
 
   static async createMenu(req, res, next) {
     try {
-      const { restaurant_id, category_id, name, description, price, stock, is_recommended, is_active } = req.body;
+      const { restaurant_id, category_id, name, description, image_url, price, stock, is_recommended, is_active } = req.body;
       const slug = slugify(name);
 
       // Check duplicate slug
@@ -94,7 +95,7 @@ class MenuController {
         return sendError(res, 'Category not found', [], 400);
       }
 
-      const imagePath = req.file ? `uploads/${req.file.filename}` : null;
+      const imagePath = image_url || (req.file ? `uploads/${req.file.filename}` : null);
       const newMenu = await MenuService.create({
         restaurant_id,
         category_id,
@@ -116,7 +117,7 @@ class MenuController {
   static async updateMenu(req, res, next) {
     try {
       const { id } = req.params;
-      const { restaurant_id, category_id, name, description, price, stock, is_recommended, is_active } = req.body;
+      const { restaurant_id, category_id, name, description, image_url, price, stock, is_recommended, is_active } = req.body;
       const slug = slugify(name);
 
       // Check existence
@@ -143,7 +144,10 @@ class MenuController {
       }
 
       let imagePath = menu.image;
-      if (req.file) {
+      if (image_url) {
+        imagePath = image_url;
+      }
+      if (!image_url && req.file) {
         imagePath = `uploads/${req.file.filename}`;
       }
 

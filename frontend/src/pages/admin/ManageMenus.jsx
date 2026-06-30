@@ -7,7 +7,7 @@ import { getImageUrl } from "../../utils/getImageUrl";
 
 const emptyForm = {
   name: "", description: "", price: "", restaurant_id: "", category_id: "",
-  stock: "0", is_recommended: "0", is_active: "1",
+  image_url: "", stock: "0", is_recommended: "0", is_active: "1",
 };
 
 function ManageMenus() {
@@ -83,6 +83,7 @@ function ManageMenus() {
       price: menu.price,
       restaurant_id: menu.restaurant_id,
       category_id: menu.category_id,
+      image_url: /^https?:\/\//i.test(menu.image || "") ? menu.image : "",
       stock: menu.stock || "0",
       is_recommended: menu.is_recommended,
       is_active: menu.is_active,
@@ -180,7 +181,19 @@ function ManageMenus() {
             <div className="md:col-span-2">
               <label className="admin-label">Gambar Menu</label>
               <input type="file" name="image" accept="image/*" onChange={handleImageChange} className="admin-input bg-white file:mr-4 file:border-2 file:border-[#281712] file:bg-[#ffe9e3] file:px-4 file:py-2 file:font-bold" />
-              <p className="mt-2 text-xs font-bold text-[#5c4037]">{imageFile ? `File dipilih: ${imageFile.name}` : editingId ? "Kosongkan jika tidak ingin mengganti gambar." : "Pilih gambar JPG, PNG, WEBP, atau GIF."}</p>
+              <p className="mt-2 text-xs font-bold text-[#5c4037]">{imageFile ? `File dipilih: ${imageFile.name}` : editingId ? "Upload file hanya aman untuk lokal. Production gunakan URL gambar." : "Pilih gambar JPG, PNG, WEBP, atau GIF. Production disarankan URL gambar."}</p>
+            </div>
+            <div className="md:col-span-2">
+              <label className="admin-label">URL Gambar Menu</label>
+              <input
+                type="url"
+                name="image_url"
+                value={form.image_url}
+                onChange={handleChange}
+                placeholder="https://example.com/menu.jpg"
+                className="admin-input"
+              />
+              <p className="mt-2 text-xs font-bold text-[#5c4037]">Gunakan URL gambar agar tampil permanen di Netlify.</p>
             </div>
             <div className="md:col-span-2">
               <label className="admin-label">Deskripsi</label>

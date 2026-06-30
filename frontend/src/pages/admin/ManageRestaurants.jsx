@@ -10,6 +10,7 @@ const emptyForm = {
   address: "",
   city: "",
   phone: "",
+  image_url: "",
   is_active: "1",
 };
 
@@ -72,6 +73,7 @@ function ManageRestaurants() {
       address: restaurant.address || "",
       city: restaurant.city || "",
       phone: restaurant.phone || "",
+      image_url: /^https?:\/\//i.test(restaurant.image || "") ? restaurant.image : "",
       is_active: String(restaurant.is_active ?? 1),
     });
     setImageFile(null);
@@ -137,7 +139,18 @@ function ManageRestaurants() {
             <div>
               <label className="admin-label">Gambar Restoran</label>
               <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} className="admin-input bg-white file:mr-4 file:border-2 file:border-[#281712] file:bg-[#ffe9e3] file:px-4 file:py-2 file:font-bold" />
-              <p className="mt-2 text-xs font-bold text-[#5c4037]">{imageFile ? imageFile.name : editingId ? "Kosongkan jika tidak ingin mengganti gambar." : "Opsional."}</p>
+              <p className="mt-2 text-xs font-bold text-[#5c4037]">{imageFile ? imageFile.name : editingId ? "Upload file hanya aman untuk lokal. Production gunakan URL gambar." : "Opsional. Production disarankan URL gambar."}</p>
+            </div>
+            <div className="md:col-span-2">
+              <label className="admin-label">URL Gambar Restoran</label>
+              <input
+                type="url"
+                value={form.image_url}
+                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                placeholder="https://example.com/restoran.jpg"
+                className="admin-input"
+              />
+              <p className="mt-2 text-xs font-bold text-[#5c4037]">Gunakan URL gambar agar tampil permanen di Netlify.</p>
             </div>
             <div className="md:col-span-2">
               <label className="admin-label">Deskripsi</label>
