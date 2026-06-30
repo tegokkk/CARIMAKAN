@@ -108,6 +108,11 @@ function Header() {
                   Admin
                 </Link>
               )}
+              {user.role === "merchant" && (
+                <Link to="/merchant" className="inline-flex h-full items-center border-r-2 border-[#281712] bg-[#2e7d32] px-4 retro-system-copy text-[#fff8f6]">
+                  Toko Saya
+                </Link>
+              )}
               <Link to="/profile" className="inline-flex h-full items-center gap-2 border-r-2 border-[#281712] px-4 retro-system-copy hover:bg-[#ffe9e3]">
                 <FaUserCircle />
                 {user.name?.split(" ")[0] || "Profil"}
@@ -168,6 +173,11 @@ function Header() {
                 {user.role === "admin" && (
                   <Link to="/admin" onClick={() => setMobileOpen(false)} className="border-2 border-transparent px-3 py-3 retro-system-copy hover:border-[#281712] hover:bg-[#e0e0e0]">
                     Admin
+                  </Link>
+                )}
+                {user.role === "merchant" && (
+                  <Link to="/merchant" onClick={() => setMobileOpen(false)} className="border-2 border-transparent px-3 py-3 retro-system-copy hover:border-[#281712] hover:bg-[#e0e0e0]">
+                    Toko Saya
                   </Link>
                 )}
                 <button onClick={handleLogout} className="px-3 py-3 text-left retro-system-copy text-[#ba1a1a]">

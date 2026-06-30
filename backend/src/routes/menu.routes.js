@@ -11,29 +11,4 @@ router.get('/stats', MenuController.getStats);
 router.get('/recommended', MenuController.getRecommended);
 router.get('/:id', MenuController.getMenuById);
 
-router.post(
-  '/',
-  authMiddleware,
-  roleMiddleware('admin'),
-  upload.single('image'),
-  validate(MenuController.menuSchema),
-  MenuController.createMenu
-);
-
-router.put(
-  '/:id',
-  authMiddleware,
-  roleMiddleware('admin'),
-  upload.single('image'),
-  validate(MenuController.menuSchema),
-  MenuController.updateMenu
-);
-
-router.delete(
-  '/:id',
-  authMiddleware,
-  roleMiddleware('admin'),
-  MenuController.deleteMenu
-);
-
 module.exports = router;

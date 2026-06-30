@@ -22,4 +22,8 @@ router.delete('/users/:id', authMiddleware, roleMiddleware('admin'), AdminContro
 router.get('/orders', authMiddleware, roleMiddleware('admin'), OrderController.getAllOrders);
 router.put('/orders/:id/status', authMiddleware, roleMiddleware('admin'), validate(OrderController.updateStatusSchema), OrderController.updateOrderStatus);
 
+router.get('/merchants', authMiddleware, roleMiddleware('admin'), AdminController.getMerchants);
+router.get('/restaurants', authMiddleware, roleMiddleware('admin'), AdminController.getRestaurants);
+router.put('/restaurants/:id/status', authMiddleware, roleMiddleware('admin'), AdminController.updateRestaurantStatus);
+
 module.exports = router;

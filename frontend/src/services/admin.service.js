@@ -17,6 +17,10 @@ const adminService = {
     const response = await api.delete(`/admin/users/${userId}`);
     return response.data;
   },
+  getMerchants: async () => {
+    const response = await api.get("/admin/merchants");
+    return response.data;
+  },
   getAllOrders: async (params = {}) => {
     try {
       const response = await api.get("/orders", { params });
@@ -57,23 +61,11 @@ const adminService = {
   },
   // Restaurants
   getRestaurants: async (params = {}) => {
-    const response = await api.get("/restaurants", { params });
+    const response = await api.get("/admin/restaurants", { params });
     return response.data;
   },
-  createRestaurant: async (data) => {
-    const response = await api.post("/restaurants", data, {
-      headers: data instanceof FormData ? { "Content-Type": "multipart/form-data" } : undefined,
-    });
-    return response.data;
-  },
-  updateRestaurant: async (id, data) => {
-    const response = await api.put(`/restaurants/${id}`, data, {
-      headers: data instanceof FormData ? { "Content-Type": "multipart/form-data" } : undefined,
-    });
-    return response.data;
-  },
-  deleteRestaurant: async (id) => {
-    const response = await api.delete(`/restaurants/${id}`);
+  updateRestaurantStatus: async (id, status) => {
+    const response = await api.put(`/admin/restaurants/${id}/status`, { status });
     return response.data;
   },
   // Menus

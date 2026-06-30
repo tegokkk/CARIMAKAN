@@ -62,22 +62,30 @@ class OrderService {
   static async checkout(userId, checkoutData) {
     const { customer_name, customer_phone, delivery_address, payment_method, notes } = checkoutData;
     const normalizedPaymentMethod = payment_method || 'COD';
-    const orderStatus = normalizedPaymentMethod === 'FAKEPAY' ? 'paid' : 'pending';
 
     return prisma.$transaction(async (tx) => {
       const cartItems = await tx.cart.findMany({
         where: { userId },
-        include: { menu: true },
+        include: { menu: { include: { restaurant: true } } },
       });
 
       if (cartItems.length === 0) {
         throw new Error('Cart is empty');
       }
 
+      const restaurantIds = new Set(cartItems.map(item => item.menu.restaurantId));
+      if (restaurantIds.size > 1) {
+        throw new Error('Satu checkout hanya boleh berisi menu dari satu restoran.');
+      }
+      const restaurantId = Array.from(restaurantIds)[0];
+
       let total_price = 0;
       for (const item of cartItems) {
         if (!item.menu?.isActive) {
           throw new Error(`Menu item '${item.menu?.name || item.menuId}' is no longer active`);
+        }
+        if (!item.menu?.restaurant?.isActive || item.menu?.restaurant?.status !== 'approved') {
+          throw new Error(`Restoran '${item.menu?.restaurant?.name || ''}' sedang tutup atau tidak aktif.`);
         }
         if (item.menu.stock < item.quantity) {
           throw new Error(`Insufficient stock for '${item.menu.name}'. Available: ${item.menu.stock}`);
@@ -91,13 +99,17 @@ class OrderService {
       const randHex = Math.floor(1000 + Math.random() * 9000);
       const order_code = `CM-${dateStr}-${randHex}`;
 
+      const paymentStatus = (normalizedPaymentMethod === 'QRIS' || normalizedPaymentMethod === 'TRANSFER') ? 'paid' : 'pending';
+
       const order = await tx.order.create({
         data: {
           userId,
+          restaurantId,
           orderCode: order_code,
           totalPrice: total_price,
-          status: orderStatus,
+          status: 'pending',
           paymentMethod: normalizedPaymentMethod,
+          paymentStatus,
           customerName: customer_name,
           customerPhone: customer_phone,
           deliveryAddress: delivery_address,
@@ -135,7 +147,8 @@ class OrderService {
         id: order.id,
         order_code,
         total_price,
-        status: orderStatus,
+        status: 'pending',
+        payment_status: paymentStatus,
         payment_method: normalizedPaymentMethod
       };
     });

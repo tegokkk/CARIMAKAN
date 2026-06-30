@@ -1,37 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import adminService from "../../services/admin.service";
 import toast from "react-hot-toast";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { getImageUrl } from "../../utils/getImageUrl";
 
-const emptyForm = {
-  name: "", description: "", price: "", restaurant_id: "", category_id: "",
-  image_url: "", stock: "0", is_recommended: "0", is_active: "1",
-};
-
 function ManageMenus() {
   const [menus, setMenus] = useState([]);
-  const [restaurants, setRestaurants] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState(emptyForm);
-  const [imageFile, setImageFile] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const fetchAll = async () => {
     try {
-      const [menuRes, restRes, catRes] = await Promise.all([
+      const [menuRes, catRes] = await Promise.all([
         adminService.getMenus({ limit: 100 }),
-        adminService.getRestaurants(),
         adminService.getCategories(),
       ]);
       setMenus(menuRes.data || []);
-      setRestaurants(restRes.data || []);
       setCategories(catRes.data || []);
     } catch {
       toast.error("Gagal memuat data");
@@ -45,57 +33,8 @@ function ManageMenus() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  const resetForm = () => {
-    setForm(emptyForm);
-    setImageFile(null);
-    setEditingId(null);
-  };
-
-  const handleChange = (event) => setForm({ ...form, [event.target.name]: event.target.value });
-  const handleImageChange = (event) => setImageFile(event.target.files?.[0] || null);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const fd = new FormData();
-    Object.keys(form).forEach((key) => fd.append(key, form[key]));
-    if (imageFile) fd.append("image", imageFile);
-
-    try {
-      if (editingId) {
-        await adminService.updateMenu(editingId, fd);
-        toast.success("Menu diperbarui");
-      } else {
-        await adminService.createMenu(fd);
-        toast.success("Menu ditambahkan");
-      }
-      resetForm();
-      setShowForm(false);
-      fetchAll();
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Gagal menyimpan menu");
-    }
-  };
-
-  const handleEdit = (menu) => {
-    setForm({
-      name: menu.name,
-      description: menu.description || "",
-      price: menu.price,
-      restaurant_id: menu.restaurant_id,
-      category_id: menu.category_id,
-      image_url: /^https?:\/\//i.test(menu.image || "") ? menu.image : "",
-      stock: menu.stock || "0",
-      is_recommended: menu.is_recommended,
-      is_active: menu.is_active,
-    });
-    setImageFile(null);
-    setEditingId(menu.id);
-    setShowForm(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const handleDelete = async (id) => {
-    if (!window.confirm("Hapus menu ini?")) return;
+    if (!window.confirm("Hapus menu ini secara permanen?")) return;
     try {
       await adminService.deleteMenu(id);
       toast.success("Menu dihapus");
@@ -131,81 +70,10 @@ function ManageMenus() {
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="retro-system-copy text-[#aa3000]">Admin / Menu</p>
-          <h1 className="retro-headline mt-2 text-4xl text-[#281712]">Kelola Menu</h1>
-          <p className="mt-2 text-[#5c4037]">Tambah, edit, dan kelola katalog makanan.</p>
+          <h1 className="retro-headline mt-2 text-4xl text-[#281712]">Pantau Menu</h1>
+          <p className="mt-2 text-[#5c4037]">Lihat semua katalog makanan dan hapus jika melanggar ketentuan.</p>
         </div>
-        <button onClick={() => { setShowForm(!showForm); resetForm(); }} className="retro-button retro-button-primary retro-press px-5 py-3">
-          <FaPlus /> Tambah Menu
-        </button>
       </div>
-
-      {showForm && (
-        <section className="admin-window mb-6">
-          <div className="admin-titlebar flex items-center px-3 retro-system-copy">
-            {editingId ? "Edit.menu" : "Tambah.menu"}
-          </div>
-          <form onSubmit={handleSubmit} className="grid gap-4 p-5 md:grid-cols-2">
-            <div>
-              <label className="admin-label">Nama Menu</label>
-              <input type="text" name="name" required value={form.name} onChange={handleChange} className="admin-input" />
-            </div>
-            <div>
-              <label className="admin-label">Harga</label>
-              <input type="number" name="price" required value={form.price} onChange={handleChange} className="admin-input" />
-            </div>
-            <div>
-              <label className="admin-label">Restoran</label>
-              <select name="restaurant_id" required value={form.restaurant_id} onChange={handleChange} className="admin-input">
-                <option value="">Pilih Restoran</option>
-                {restaurants.map((restaurant) => <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="admin-label">Kategori</label>
-              <select name="category_id" required value={form.category_id} onChange={handleChange} className="admin-input">
-                <option value="">Pilih Kategori</option>
-                {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="admin-label">Stok</label>
-              <input type="number" name="stock" value={form.stock} onChange={handleChange} className="admin-input" />
-            </div>
-            <div>
-              <label className="admin-label">Aktif</label>
-              <select name="is_active" value={form.is_active} onChange={handleChange} className="admin-input">
-                <option value="1">Aktif</option>
-                <option value="0">Non-aktif</option>
-              </select>
-            </div>
-            <div className="md:col-span-2">
-              <label className="admin-label">Gambar Menu</label>
-              <input type="file" name="image" accept="image/*" onChange={handleImageChange} className="admin-input bg-white file:mr-4 file:border-2 file:border-[#281712] file:bg-[#ffe9e3] file:px-4 file:py-2 file:font-bold" />
-              <p className="mt-2 text-xs font-bold text-[#5c4037]">{imageFile ? `File dipilih: ${imageFile.name}` : editingId ? "Upload file hanya aman untuk lokal. Production gunakan URL gambar." : "Pilih gambar JPG, PNG, WEBP, atau GIF. Production disarankan URL gambar."}</p>
-            </div>
-            <div className="md:col-span-2">
-              <label className="admin-label">URL Gambar Menu</label>
-              <input
-                type="url"
-                name="image_url"
-                value={form.image_url}
-                onChange={handleChange}
-                placeholder="https://example.com/menu.jpg"
-                className="admin-input"
-              />
-              <p className="mt-2 text-xs font-bold text-[#5c4037]">Gunakan URL gambar agar tampil permanen di Netlify.</p>
-            </div>
-            <div className="md:col-span-2">
-              <label className="admin-label">Deskripsi</label>
-              <textarea name="description" value={form.description} onChange={handleChange} rows={2} className="admin-input" />
-            </div>
-            <div className="flex gap-3 md:col-span-2">
-              <button type="submit" className="retro-button retro-button-primary retro-press px-6 py-3">{editingId ? "Simpan" : "Tambahkan"}</button>
-              <button type="button" onClick={() => { setShowForm(false); setImageFile(null); }} className="retro-button retro-press px-6 py-3">Batal</button>
-            </div>
-          </form>
-        </section>
-      )}
 
       <section className="admin-panel mb-6 grid gap-3 p-4 md:grid-cols-[1fr_12rem_14rem]">
         <div>
@@ -244,7 +112,7 @@ function ManageMenus() {
               <th>Restoran</th>
               <th>Kategori</th>
               <th>Harga</th>
-              <th>Aktif</th>
+              <th>Status Aktif</th>
               <th className="text-right">Aksi</th>
             </tr>
           </thead>
@@ -264,13 +132,12 @@ function ManageMenus() {
                 <td className="font-black text-[#aa3000]">{formatCurrency(menu.price)}</td>
                 <td>
                   <span className={`admin-badge ${menu.is_active ? "admin-badge-active" : "admin-badge-danger"}`}>
-                    {menu.is_active ? "Aktif" : "Non-aktif"}
+                    {menu.is_active ? "Aktif" : "Non-aktif (Oleh Toko)"}
                   </span>
                 </td>
                 <td>
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => handleEdit(menu)} className="admin-icon-button text-[#005daa]"><FaEdit /></button>
-                    <button onClick={() => handleDelete(menu.id)} className="admin-icon-button text-[#ba1a1a]"><FaTrash /></button>
+                    <button onClick={() => handleDelete(menu.id)} className="admin-icon-button text-[#ba1a1a]" title="Hapus Menu Permanen"><FaTrash /></button>
                   </div>
                 </td>
               </tr>

@@ -68,9 +68,16 @@ class CartController {
       const { menu_id, quantity } = req.body;
 
       // Check if menu exists and is active
-      const menu = await prisma.menu.findUnique({ where: { id: menu_id } });
+      const menu = await prisma.menu.findUnique({ 
+        where: { id: menu_id },
+        include: { restaurant: true }
+      });
       if (!menu || !menu.isActive) {
         return sendError(res, 'Menu item not found or unavailable', [], 404);
+      }
+
+      if (!menu.restaurant.isActive || menu.restaurant.status !== 'approved') {
+        return sendError(res, 'Restoran sedang tutup atau tidak aktif', [], 400);
       }
 
       // Check stock
@@ -78,10 +85,20 @@ class CartController {
         return sendError(res, `Insufficient stock. Only ${menu.stock} items left`, [], 400);
       }
 
-      // Check if item is already in user's cart
-      const existing = await prisma.cart.findFirst({
-        where: { userId, menuId: menu_id },
+      // Validate single restaurant per cart
+      const existingCartItems = await prisma.cart.findMany({
+        where: { userId },
+        include: { menu: true },
       });
+
+      if (existingCartItems.length > 0) {
+        const existingRestaurantId = existingCartItems[0].menu.restaurantId;
+        if (existingRestaurantId !== menu.restaurantId) {
+          return sendError(res, 'Selesaikan pesanan di restoran sebelumnya atau kosongkan keranjang untuk memesan dari restoran ini.', [], 400);
+        }
+      }
+
+      const existing = existingCartItems.find(item => item.menuId === menu_id);
 
       if (existing) {
         const newQuantity = existing.quantity + quantity;

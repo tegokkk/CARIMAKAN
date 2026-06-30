@@ -1,12 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContextValue";
-import { FaClipboardList, FaHome, FaSignOutAlt, FaStore, FaTags, FaTerminal, FaUsers, FaUtensils } from "react-icons/fa";
+import { FaClipboardList, FaHome, FaSignOutAlt, FaStore, FaTags, FaTerminal, FaUsers, FaUserTie, FaUtensils } from "react-icons/fa";
 
 const navItems = [
   { label: "Dashboard", to: "/admin", icon: <FaTerminal /> },
   { label: "Menu", to: "/admin/menus", icon: <FaUtensils /> },
   { label: "Restoran", to: "/admin/restaurants", icon: <FaStore /> },
+  { label: "Merchant", to: "/admin/merchants", icon: <FaUserTie /> },
   { label: "Kategori", to: "/admin/categories", icon: <FaTags /> },
   { label: "Pesanan", to: "/admin/orders", icon: <FaClipboardList /> },
   { label: "Pengguna", to: "/admin/users", icon: <FaUsers /> },
@@ -31,22 +32,22 @@ function AdminSidebar() {
           <span className="h-4 w-4 border border-[#fff8f6]" />
         </div>
 
-        <div className="border-b-2 border-[#281712] bg-white p-5">
-          <Link to="/" className="retro-headline flex items-center gap-3 text-2xl text-[#aa3000]">
+        <div className="border-b-2 border-[#281712] bg-white px-5 py-3">
+          <Link to="/" className="retro-headline flex items-center gap-3 text-xl text-[#aa3000]">
             <FaHome />
             CariMakan
           </Link>
-          <p className="mt-2 retro-system-copy text-[#5c4037]">Panel administrator</p>
+          <p className="mt-1 retro-system-copy text-[#5c4037]">Panel administrator</p>
         </div>
 
-        <nav className="flex-1 space-y-2 overflow-y-auto p-4">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
           {navItems.map((item) => {
             const active = pathname === item.to;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`retro-press flex items-center gap-3 border-2 px-4 py-3 retro-system-copy shadow-[3px_3px_0_#281712] ${
+                className={`retro-press flex items-center gap-3 border-2 px-3 py-2 retro-system-copy shadow-[2px_2px_0_#281712] ${
                   active
                     ? "border-[#281712] bg-[#aa3000] text-white"
                     : "border-[#281712] bg-white text-[#281712] hover:bg-[#ffe9e3]"
@@ -59,10 +60,10 @@ function AdminSidebar() {
           })}
         </nav>
 
-        <div className="border-t-2 border-[#281712] p-4">
+        <div className="border-t-2 border-[#281712] p-3">
           <button
             onClick={handleLogout}
-            className="retro-button retro-press w-full justify-start px-4 py-3 text-[#93000a]"
+            className="retro-button retro-press w-full justify-start px-3 py-2 text-[#93000a]"
           >
             <FaSignOutAlt />
             Keluar

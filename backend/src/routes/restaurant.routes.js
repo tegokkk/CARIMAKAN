@@ -9,29 +9,4 @@ const upload = require('../middlewares/upload.middleware');
 router.get('/', RestaurantController.getRestaurants);
 router.get('/:id', RestaurantController.getRestaurantById);
 
-router.post(
-  '/',
-  authMiddleware,
-  roleMiddleware('admin'),
-  upload.single('image'),
-  validate(RestaurantController.restaurantSchema),
-  RestaurantController.createRestaurant
-);
-
-router.put(
-  '/:id',
-  authMiddleware,
-  roleMiddleware('admin'),
-  upload.single('image'),
-  validate(RestaurantController.restaurantSchema),
-  RestaurantController.updateRestaurant
-);
-
-router.delete(
-  '/:id',
-  authMiddleware,
-  roleMiddleware('admin'),
-  RestaurantController.deleteRestaurant
-);
-
 module.exports = router;

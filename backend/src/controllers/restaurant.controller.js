@@ -44,6 +44,7 @@ class RestaurantController {
   static async getRestaurants(req, res, next) {
     try {
       const restaurants = await prisma.restaurant.findMany({
+        where: { isActive: true, status: 'approved' },
         orderBy: [{ rating: 'desc' }, { name: 'asc' }],
       });
       return sendSuccess(res, 'Restaurants fetched successfully', restaurants.map(mapRestaurant));
@@ -57,7 +58,7 @@ class RestaurantController {
       const { id } = req.params;
       const restaurant = await prisma.restaurant.findUnique({ where: { id: Number(id) } });
 
-      if (!restaurant) {
+      if (!restaurant || (restaurant.status !== 'approved' && !req?.headers?.['x-admin'])) {
         return sendError(res, 'Restaurant not found', [], 404);
       }
 

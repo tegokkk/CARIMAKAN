@@ -20,6 +20,7 @@ const favoriteRoutes = require('./routes/favorite.routes');
 const reviewRoutes = require('./routes/review.routes');
 const externalRoutes = require('./routes/external.routes');
 const adminRoutes = require('./routes/admin.routes');
+const merchantRoutes = require('./routes/merchant.routes');
 
 const app = express();
 
@@ -86,6 +87,7 @@ app.use('/api/favorites', favoriteRoutes);
 app.use('/api', reviewRoutes); // Handles /api/menus/:menuId/reviews and /api/reviews/:id
 app.use('/api/external', externalRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/merchant', merchantRoutes);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

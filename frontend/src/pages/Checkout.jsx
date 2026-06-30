@@ -27,7 +27,8 @@ function Checkout() {
   const navigate = useNavigate();
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("FAKEPAY");
+  const [paymentMethod, setPaymentMethod] = useState("QRIS");
+  const [showQrisModal, setShowQrisModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const checkoutRef = useRef(null);
 
@@ -49,9 +50,14 @@ function Checkout() {
   );
 
   const handleCheckout = async (event) => {
-    event.preventDefault();
+    event?.preventDefault();
     if (!address.trim()) {
       toast.error("Alamat pengiriman harus diisi.");
+      return;
+    }
+
+    if (paymentMethod === "QRIS" && !showQrisModal) {
+      setShowQrisModal(true);
       return;
     }
 
@@ -62,10 +68,11 @@ function Checkout() {
         customer_phone: user?.phone || "080000000000",
         delivery_address: address,
         payment_method: paymentMethod,
-        notes: notes.trim() || (paymentMethod === "FAKEPAY" ? "Pembayaran simulasi FakePay berhasil." : "Bayar saat pesanan tiba."),
+        notes: notes.trim() || (paymentMethod === "QRIS" ? "Pembayaran QRIS berhasil." : "Bayar saat pesanan tiba."),
       });
-      toast.success(paymentMethod === "FAKEPAY" ? "Pembayaran berhasil, pesanan dibuat." : "Pesanan COD berhasil dibuat.");
+      toast.success(paymentMethod === "QRIS" ? "Pembayaran berhasil, pesanan dibuat." : "Pesanan COD berhasil dibuat.");
       await refreshCart();
+      setShowQrisModal(false);
       const orderId = checkoutResult.data?.id;
       navigate(orderId ? `/orders/${orderId}?success=1` : "/orders");
     } catch (checkoutError) {
@@ -157,9 +164,9 @@ function Checkout() {
               <div className="grid gap-3">
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod("FAKEPAY")}
+                  onClick={() => setPaymentMethod("QRIS")}
                   className={`flex items-center justify-between border-2 border-[#281712] p-5 text-left shadow-[3px_3px_0_#281712] transition ${
-                    paymentMethod === "FAKEPAY"
+                    paymentMethod === "QRIS"
                       ? "bg-[#fff1ed]"
                       : "bg-white hover:bg-[#fff8f6]"
                   }`}
@@ -169,11 +176,11 @@ function Checkout() {
                       <FaWallet />
                     </span>
                     <span>
-                      <span className="block font-black text-[#281712]">FakePay Wallet</span>
-                      <span className="text-sm font-semibold text-[#5c4037]">Pembayaran simulasi otomatis berhasil</span>
+                      <span className="block font-black text-[#281712]">QRIS (Simulasi)</span>
+                      <span className="text-sm font-semibold text-[#5c4037]">Bayar instan menggunakan e-wallet / m-banking</span>
                     </span>
                   </span>
-                  {paymentMethod === "FAKEPAY" && <FaCheckCircle className="text-xl text-[#aa3000]" />}
+                  {paymentMethod === "QRIS" && <FaCheckCircle className="text-xl text-[#aa3000]" />}
                 </button>
 
                 <button
@@ -260,6 +267,29 @@ function Checkout() {
           </aside>
         </form>
       </div>
+
+      {showQrisModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="admin-window w-full max-w-sm bg-white p-6 text-center">
+            <h2 className="retro-headline text-2xl text-[#281712] mb-4">Simulasi Bayar QRIS</h2>
+            <div className="mx-auto w-48 h-48 bg-gray-200 border-4 border-[#281712] flex items-center justify-center mb-6 relative">
+              <span className="font-bold text-[#5c4037] text-xl z-10 bg-white px-2">QR CODE</span>
+              <div className="absolute inset-0 grid grid-cols-5 grid-rows-5 gap-1 p-2 opacity-50">
+                {Array.from({ length: 25 }).map((_, i) => (
+                  <div key={i} className="bg-black rounded-sm" style={{ opacity: Math.random() > 0.5 ? 1 : 0 }}></div>
+                ))}
+              </div>
+            </div>
+            <p className="retro-system-copy text-[#5c4037] mb-6 font-bold">Total Tagihan: <span className="text-[#aa3000] text-xl">{formatCurrency(total)}</span></p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowQrisModal(false)} className="retro-button retro-press w-full py-3">Batal</button>
+              <button onClick={handleCheckout} disabled={loading} className="retro-button retro-button-primary retro-press w-full py-3">
+                {loading ? "Proses..." : "Simulasikan Bayar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageWrapper>
   );
 }

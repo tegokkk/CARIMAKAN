@@ -3,7 +3,7 @@ const prisma = require('../config/prisma');
 const generateToken = require('../utils/generateToken');
 
 class AuthService {
-  static async register({ name, email, password, phone }) {
+  static async register({ name, email, password, phone, role = 'user' }) {
     // Check if user already exists
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -20,7 +20,7 @@ class AuthService {
         email,
         password: hashedPassword,
         phone: phone || null,
-        role: 'user',
+        role: role,
       },
     });
 
@@ -29,7 +29,7 @@ class AuthService {
       name,
       email,
       phone,
-      role: 'user'
+      role: user.role
     };
   }
 

@@ -10,7 +10,7 @@ import RetroWindow from "../components/common/RetroWindow";
 import { gsap, useGSAP } from "../animations/gsapConfig";
 
 function Register() {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "", role: "user" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -63,6 +63,7 @@ function Register() {
     { label: "Email", name: "email", type: "email", placeholder: "contoh@email.com" },
     { label: "Nomor HP", name: "phone", type: "text", placeholder: "08123456789", pattern: "^08[0-9]{8,11}$" },
     { label: "Password", name: "password", type: "password", placeholder: "Minimal 6 karakter", minLength: 6 },
+    { label: "Mendaftar Sebagai", name: "role", type: "select", options: [{value: "user", label: "Pelanggan (Customer)"}, {value: "merchant", label: "Toko (Merchant)"}] },
   ];
 
   return (
@@ -102,14 +103,25 @@ function Register() {
                 {fields.map((field) => (
                   <div key={field.name} className={field.name === "password" ? "md:col-span-2" : ""}>
                     <label className="mb-2 block retro-system-copy text-[#281712]">{field.label}</label>
-                    <input
-                      {...field}
-                      value={formData[field.name]}
-                      onChange={handleChange}
-                      required
-                      title={field.name === "phone" ? "Nomor HP harus diawali 08 dan berisi 10-13 digit angka" : undefined}
-                      className={`retro-input h-12 w-full px-4 ${errors[field.name] ? "border-[#ba1a1a]" : ""}`}
-                    />
+                    {field.type === "select" ? (
+                      <select
+                        name={field.name}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        className={`retro-input h-12 w-full px-4 ${errors[field.name] ? "border-[#ba1a1a]" : ""}`}
+                      >
+                        {field.options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                      </select>
+                    ) : (
+                      <input
+                        {...field}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        required
+                        title={field.name === "phone" ? "Nomor HP harus diawali 08 dan berisi 10-13 digit angka" : undefined}
+                        className={`retro-input h-12 w-full px-4 ${errors[field.name] ? "border-[#ba1a1a]" : ""}`}
+                      />
+                    )}
                     {errors[field.name] && (
                       <p className="mt-2 border-2 border-[#ba1a1a] bg-[#ffdad6] px-3 py-2 text-xs font-bold text-[#93000a]">
                         {errors[field.name]}

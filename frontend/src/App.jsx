@@ -25,6 +25,14 @@ import ManageCategories from "./pages/admin/ManageCategories";
 import ManageRestaurants from "./pages/admin/ManageRestaurants";
 import ManageOrders from "./pages/admin/ManageOrders";
 import ManageUsers from "./pages/admin/ManageUsers";
+import ManageMerchants from "./pages/admin/ManageMerchants";
+
+// Merchant Pages
+import MerchantLayout from "./pages/merchant/MerchantLayout";
+import MerchantDashboard from "./pages/merchant/MerchantDashboard";
+import MerchantRestaurants from "./pages/merchant/MerchantRestaurants";
+import MerchantMenus from "./pages/merchant/MerchantMenus";
+import MerchantOrders from "./pages/merchant/MerchantOrders";
 
 // Common Components
 import Header from "./components/common/Header";
@@ -46,6 +54,15 @@ function App() {
             <Route path="restaurants" element={<ManageRestaurants />} />
             <Route path="orders" element={<ManageOrders />} />
             <Route path="users" element={<ManageUsers />} />
+            <Route path="merchants" element={<ManageMerchants />} />
+          </Route>
+
+          {/* Merchant Routes (Uses its own Layout) */}
+          <Route path="/merchant" element={<ProtectedRoute roles={["merchant", "admin"]}><MerchantLayout /></ProtectedRoute>}>
+            <Route index element={<MerchantDashboard />} />
+            <Route path="restaurants" element={<MerchantRestaurants />} />
+            <Route path="menus" element={<MerchantMenus />} />
+            <Route path="orders" element={<MerchantOrders />} />
           </Route>
 
           {/* Public Routes */}

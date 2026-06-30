@@ -34,6 +34,10 @@ class MenuService {
 
     if (includeInactive !== '1' && includeInactive !== 'true') {
       where.isActive = true;
+      where.restaurant = {
+        isActive: true,
+        status: 'approved'
+      };
     }
 
     if (search) {
@@ -110,6 +114,10 @@ class MenuService {
       where: {
         isRecommended: true,
         isActive: true,
+        restaurant: {
+          isActive: true,
+          status: 'approved'
+        }
       },
       include: menuInclude,
       orderBy: [{ rating: 'desc' }, { name: 'asc' }],

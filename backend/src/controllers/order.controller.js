@@ -14,8 +14,8 @@ const checkoutSchema = z.object({
 
 const updateStatusSchema = z.object({
   body: z.object({
-    status: z.enum(['pending', 'paid', 'process', 'done', 'cancelled'], {
-      errorMap: () => ({ message: 'Invalid status. Must be pending, paid, process, done, or cancelled' })
+    status: z.enum(['pending', 'accepted', 'processing', 'ready', 'done', 'cancelled'], {
+      errorMap: () => ({ message: 'Invalid status. Must be pending, accepted, processing, ready, done, or cancelled' })
     })
   })
 });
@@ -35,7 +35,18 @@ class OrderController {
       const order = await OrderService.checkout(userId, req.body);
       return sendSuccess(res, 'Checkout completed successfully', order, null, 201);
     } catch (error) {
-      if (error.message === 'Cart is empty' || error.message.includes('Insufficient stock') || error.message.includes('not found')) {
+      const knownErrors = [
+        'Cart is empty',
+        'Insufficient stock',
+        'not found',
+        'not active',
+        'tidak aktif',
+        'tutup',
+        'satu checkout',
+        'satu restoran'
+      ];
+      const isKnown = knownErrors.some(msg => error.message?.toLowerCase().includes(msg.toLowerCase()));
+      if (isKnown) {
         return sendError(res, error.message, [], 400);
       }
       next(error);

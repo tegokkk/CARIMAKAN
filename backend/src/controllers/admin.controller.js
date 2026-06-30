@@ -129,7 +129,7 @@ class AdminController {
       const { id } = req.params;
       const { role } = req.body;
 
-      if (!['user', 'admin'].includes(role)) {
+      if (!['user', 'admin', 'merchant'].includes(role)) {
         return sendError(res, 'Role tidak valid', [], 400);
       }
 
@@ -163,6 +163,63 @@ class AdminController {
 
       await prisma.user.delete({ where: { id: Number(id) } });
       return sendSuccess(res, 'User deleted successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getMerchants(req, res, next) {
+    try {
+      const merchants = await prisma.user.findMany({
+        where: { role: 'merchant' },
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          role: true,
+          createdAt: true,
+        },
+      });
+      return sendSuccess(res, 'Merchants fetched successfully', merchants.map(mapUser));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getRestaurants(req, res, next) {
+    try {
+      const restaurants = await prisma.restaurant.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: { owner: { select: { id: true, name: true, email: true } } }
+      });
+      return sendSuccess(res, 'Restaurants fetched successfully', restaurants);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateRestaurantStatus(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      if (!['pending', 'approved', 'rejected', 'suspended'].includes(status)) {
+        return sendError(res, 'Status tidak valid', [], 400);
+      }
+
+      const existing = await prisma.restaurant.findUnique({ where: { id: Number(id) } });
+      if (!existing) {
+        return sendError(res, 'Restaurant tidak ditemukan', [], 404);
+      }
+
+      const updated = await prisma.restaurant.update({
+        where: { id: Number(id) },
+        data: { status, isActive: status === 'approved' },
+      });
+      
+      return sendSuccess(res, 'Restaurant status updated successfully', updated);
     } catch (error) {
       next(error);
     }
